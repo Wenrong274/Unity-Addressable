@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
-  m_DefaultGroup: 593b353b763e5484ea0f75723a35f02f
+  m_DefaultGroup: 2ac6f7ca1222766499d0ecd09be9b40f
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
-  m_DisableCatalogUpdateOnStart: 0
+  m_DisableCatalogUpdateOnStart: 1
   m_IgnoreUnsupportedFilesInBuild: 0
   m_UniqueBundleIds: 0
   m_maxConcurrentWebRequests: 500
@@ -28,7 +28,6 @@ MonoBehaviour:
   m_overridePlayerVersion: 
   m_GroupAssets:
   - {fileID: 11400000, guid: 9711959097090384e9064f24ea156ca1, type: 2}
-  - {fileID: 11400000, guid: fdf77cb002033ba418f430c38dafadea, type: 2}
   - {fileID: 11400000, guid: 7db983b26dc0c8b449a0926ed1d56c10, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
@@ -70,7 +69,10 @@ MonoBehaviour:
     m_ProfileVersion: 1
   m_LabelTable:
     m_LabelNames:
-    - default
+    - Scene1
+    - Scene2
+    - Scene3
+    - Scene4
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 67ad2418d4001d74c8469afe8eeb28c4, type: 2}
@@ -97,7 +99,7 @@ MonoBehaviour:
           m_Key: HostingServicePort
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.String
-          m_Data: Library/com.unity.addressables/aa/Windows/StandaloneWindows
+          m_Data: ServerData/StandaloneWindows
           m_Key: ContentRoot
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.Boolean

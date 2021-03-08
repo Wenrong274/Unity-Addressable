@@ -20,27 +20,31 @@ MonoBehaviour:
   - m_GUID: 82af19ed76a8ed74fb1dd5d45c780da8
     m_Address: ActionCheck
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Scene1
     m_MainAsset: {fileID: 102900000, guid: 82af19ed76a8ed74fb1dd5d45c780da8, type: 3}
     m_TargetAsset: {fileID: 102900000, guid: 82af19ed76a8ed74fb1dd5d45c780da8, type: 3}
   - m_GUID: dc19d125674d55e4395fbb75f6d6f855
     m_Address: ARPoseTest
     m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 102900000, guid: dc19d125674d55e4395fbb75f6d6f855, type: 3}
-    m_TargetAsset: {fileID: 102900000, guid: dc19d125674d55e4395fbb75f6d6f855, type: 3}
+    m_SerializedLabels:
+    - Scene2
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   - m_GUID: 957eefe92df624143ad9333b8bc01eb8
     m_Address: Locomotion
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Scene3
     m_MainAsset: {fileID: 102900000, guid: 957eefe92df624143ad9333b8bc01eb8, type: 3}
     m_TargetAsset: {fileID: 102900000, guid: 957eefe92df624143ad9333b8bc01eb8, type: 3}
   - m_GUID: 303d6058a98f643abb202d652ad2be31
     m_Address: SecondaryAnimation
     m_ReadOnly: 0
-    m_SerializedLabels: []
-    m_MainAsset: {fileID: 102900000, guid: 303d6058a98f643abb202d652ad2be31, type: 3}
-    m_TargetAsset: {fileID: 102900000, guid: 303d6058a98f643abb202d652ad2be31, type: 3}
+    m_SerializedLabels:
+    - Scene4
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4b9d86a7e1d37a542b433b97ee6747a8, type: 2}
   m_SchemaSet:
