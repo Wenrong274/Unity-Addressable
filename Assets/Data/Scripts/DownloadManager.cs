@@ -1,6 +1,5 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AddressableAssets.ResourceLocators;
@@ -10,61 +9,116 @@ namespace UnityAASample
 {
     public class DownloadManager : MonoBehaviour
     {
-        async void Start()
+        IEnumerator Start()
         {
-            /// 手動初始化 Addressable Asset System
-            var AAInit = Addressables.InitializeAsync();
-            await AAInit.Task;
-            await UpdateCatalog();
+            var InitAddressablesAsync = Addressables.InitializeAsync();
+            yield return InitAddressablesAsync;
+            yield return UpdateAllAddressablsGroupsCoro();
         }
 
-        async Task UpdateCatalog()
+        public void UpdateAllAddressablsGroups()
         {
-            var checkList = await checkCatalog();
-            var catalog = await DownloadCatalog(checkList);
-            await DownloadBundleList(catalog);
-
+            StartCoroutine(UpdateAllAddressablsGroupsCoro());
         }
 
-        async Task<List<string>> checkCatalog()
+        public void LabelDownloadAsset(string label)
         {
-            var async = Addressables.CheckForCatalogUpdates(false);
-            await async.Task;
-            if (async.Status != AsyncOperationStatus.Succeeded)
-                Debug.Log(async.OperationException.Message);
-            return async.Result;
+            StartCoroutine(LabelCheckAndDownloadAsset(label));
         }
 
-        async Task<List<IResourceLocator>> DownloadCatalog(List<string> list)
+        #region Update All Assets
+        IEnumerator UpdateAllAddressablsGroupsCoro()
         {
-            var async = Addressables.UpdateCatalogs(list);
-            await async.Task;
-            if (async.Status != AsyncOperationStatus.Succeeded)
-                Debug.Log(async.OperationException.Message);
-            return async.Result;
-        }
+            List<string> CatalogsToUpdate = new List<string>();
+            List<IResourceLocator> UpdateAssets = new List<IResourceLocator>();
 
-        async Task DownloadBundleList(List<IResourceLocator> locator)
-        {
-            foreach (var loc in locator)
-                foreach (var key in loc.Keys)
-                    await DownloadBundle(key);
+            yield return CheckCatalog(CatalogsToUpdate);
 
-        }
-
-        async Task DownloadBundle(object key)
-        {
-            var sizeAsync = Addressables.GetDownloadSizeAsync(key);
-            await sizeAsync.Task;
-
-            /// size > 0 == 需要下載
-            if (sizeAsync.Result > 0)
+            if (CatalogsToUpdate.Count == 0)
             {
-                var downloadAsync = Addressables.DownloadDependenciesAsync(key);
-                await downloadAsync.Task;
-                Addressables.Release(downloadAsync);
+                Debug.Log("last version");
+                yield break;
             }
-            Addressables.Release(sizeAsync);
+
+            yield return UpdateCatalog(CatalogsToUpdate, UpdateAssets);
+            yield return DownloadAssets(UpdateAssets);
         }
+
+        IEnumerator CheckCatalog(List<string> UpdateAssets)
+        {
+            var CheckCatalogAsync = Addressables.CheckForCatalogUpdates(false);
+            yield return CheckCatalogAsync;
+            if (CheckCatalogAsync.Status == AsyncOperationStatus.Succeeded)
+                UpdateAssets = CheckCatalogAsync.Result;
+        }
+
+        IEnumerator UpdateCatalog(List<string> updateAssets, List<IResourceLocator> DownladAssets)
+        {
+            var UpdateCatalogsAsync = Addressables.UpdateCatalogs(updateAssets, false);
+            yield return UpdateCatalogsAsync;
+            if (UpdateCatalogsAsync.Status == AsyncOperationStatus.Succeeded)
+                DownladAssets = UpdateCatalogsAsync.Result;
+        }
+
+        IEnumerator DownloadAssets(List<IResourceLocator> DownladAssets)
+        {
+            foreach (var loc in DownladAssets)
+            {
+                foreach (var key in loc.Keys)
+                {
+                    var sizeAsync = Addressables.GetDownloadSizeAsync(key);
+                    yield return sizeAsync;
+                    long totalDownloadSize = sizeAsync.Result;
+
+                    if (sizeAsync.Result > 0)
+                    {
+                        var downloadAsync = Addressables.DownloadDependenciesAsync(key);
+                        while (!downloadAsync.IsDone)
+                        {
+                            float percent = downloadAsync.PercentComplete;
+                            Debug.Log($"{key} = percent {(int)(totalDownloadSize * percent)}/{totalDownloadSize}");
+                            yield return new WaitForEndOfFrame();
+                        }
+                        Addressables.Release(downloadAsync);
+                    }
+                    Addressables.Release(sizeAsync);
+                }
+            }
+            Debug.Log("UpdateAssets finish");
+        }
+        #endregion
+
+        #region  Update Label Assets 
+        IEnumerator LabelCheckAndDownloadAsset(string label)
+        {
+            long updateLabelSize = 0;
+            var async = Addressables.GetDownloadSizeAsync(label);
+            yield return async;
+            if (async.Status == AsyncOperationStatus.Succeeded)
+                updateLabelSize = async.Result;
+            Addressables.Release(async);
+            if (updateLabelSize == 0)
+            {
+                Debug.Log($"{label} last version");
+                yield break;
+            }
+            yield return DownloadLabelAsset(label);
+        }
+
+        IEnumerator DownloadLabelAsset(string label)
+        {
+            var downloadAsync = Addressables.DownloadDependenciesAsync(label, false);
+
+            while (!downloadAsync.IsDone)
+            {
+                float percent = downloadAsync.PercentComplete;
+                Debug.Log($"{label}: {downloadAsync.PercentComplete * 100} %");
+                yield return new WaitForEndOfFrame();
+            }
+            Addressables.Release(downloadAsync);
+
+            Debug.Log($"{label} UpdateAssets finish");
+        }
+        #endregion
     }
 }
