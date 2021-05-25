@@ -13,56 +13,51 @@ namespace UnityAASample
         {
             var InitAddressablesAsync = Addressables.InitializeAsync();
             yield return InitAddressablesAsync;
-            yield return UpdateAllAddressablsGroupsCoro();
+            yield return UpdateCatalogCoro();
         }
 
         public void UpdateAllAddressablsGroups()
         {
-            StartCoroutine(UpdateAllAddressablsGroupsCoro());
+            StartCoroutine(UpdateAllGroupsCoro());
         }
 
         public void LabelDownloadAsset(string label)
         {
-            StartCoroutine(LabelCheckAndDownloadAsset(label));
+            StartCoroutine(UpdateLabelAsset(label));
         }
 
-        #region Update All Assets
-        IEnumerator UpdateAllAddressablsGroupsCoro()
+        public void ClearAllAsset()
         {
-            List<string> CatalogsToUpdate = new List<string>();
-            List<IResourceLocator> UpdateAssets = new List<IResourceLocator>();
+            StartCoroutine(ClearAllAssetCoro());
+        }
 
-            yield return CheckCatalog(CatalogsToUpdate);
+        public void ClearLabelAsset(string label)
+        {
+            StartCoroutine(ClearAssetCoro(label));
+        }
 
-            if (CatalogsToUpdate.Count == 0)
+        #region Update Catalog
+        IEnumerator UpdateCatalogCoro()
+        {
+            List<string> catalogsToUpdate = new List<string>();
+            var checkCatalogHandle = Addressables.CheckForCatalogUpdates();
+            yield return checkCatalogHandle;
+
+            if (checkCatalogHandle.Status == AsyncOperationStatus.Succeeded)
+                catalogsToUpdate = checkCatalogHandle.Result;
+
+            if (catalogsToUpdate.Count > 0)
             {
-                Debug.Log("last version");
-                yield break;
+                var updateCatalogHandle = Addressables.UpdateCatalogs(catalogsToUpdate, false);
+                yield return updateCatalogHandle;
             }
-
-            yield return UpdateCatalog(CatalogsToUpdate, UpdateAssets);
-            yield return DownloadAssets(UpdateAssets);
         }
+        #endregion
 
-        IEnumerator CheckCatalog(List<string> UpdateAssets)
+        #region Download All Asset
+        IEnumerator UpdateAllGroupsCoro()
         {
-            var CheckCatalogAsync = Addressables.CheckForCatalogUpdates(false);
-            yield return CheckCatalogAsync;
-            if (CheckCatalogAsync.Status == AsyncOperationStatus.Succeeded)
-                UpdateAssets = CheckCatalogAsync.Result;
-        }
-
-        IEnumerator UpdateCatalog(List<string> updateAssets, List<IResourceLocator> DownladAssets)
-        {
-            var UpdateCatalogsAsync = Addressables.UpdateCatalogs(updateAssets, false);
-            yield return UpdateCatalogsAsync;
-            if (UpdateCatalogsAsync.Status == AsyncOperationStatus.Succeeded)
-                DownladAssets = UpdateCatalogsAsync.Result;
-        }
-
-        IEnumerator DownloadAssets(List<IResourceLocator> DownladAssets)
-        {
-            foreach (var loc in DownladAssets)
+            foreach (var loc in Addressables.ResourceLocators)
             {
                 foreach (var key in loc.Keys)
                 {
@@ -84,12 +79,12 @@ namespace UnityAASample
                     Addressables.Release(sizeAsync);
                 }
             }
-            Debug.Log("UpdateAssets finish");
+            Debug.Log("Download All Asset finish");
         }
         #endregion
 
-        #region  Update Label Assets 
-        IEnumerator LabelCheckAndDownloadAsset(string label)
+        #region Update label Asset
+        IEnumerator UpdateLabelAsset(string label)
         {
             long updateLabelSize = 0;
             var async = Addressables.GetDownloadSizeAsync(label);
@@ -118,6 +113,28 @@ namespace UnityAASample
             Addressables.Release(downloadAsync);
 
             Debug.Log($"{label} UpdateAssets finish");
+        }
+        #endregion
+
+        #region Clear Asset
+        IEnumerator ClearAllAssetCoro()
+        {
+            foreach (var locats in Addressables.ResourceLocators)
+            {
+                var async = Addressables.ClearDependencyCacheAsync(locats.Keys, false);
+                yield return async;
+                Addressables.Release(async);
+            }
+            Caching.ClearCache();
+        }
+
+        IEnumerator ClearAssetCoro(string label)
+        {
+            var async = Addressables.LoadResourceLocationsAsync(label);
+            yield return async;
+            var locats = async.Result;
+            foreach (var locat in locats)
+                Addressables.ClearDependencyCacheAsync(locat.PrimaryKey);
         }
         #endregion
     }
