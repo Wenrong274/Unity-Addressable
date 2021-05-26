@@ -54,7 +54,7 @@ namespace UnityAASample
         }
         #endregion
 
-        #region Download All Asset
+        #region Update All Asset
         IEnumerator UpdateAllGroupsCoro()
         {
             foreach (var loc in Addressables.ResourceLocators)
