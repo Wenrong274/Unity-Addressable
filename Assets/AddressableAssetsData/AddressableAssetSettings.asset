@@ -29,6 +29,7 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 9711959097090384e9064f24ea156ca1, type: 2}
   - {fileID: 11400000, guid: 7db983b26dc0c8b449a0926ed1d56c10, type: 2}
+  - {fileID: 11400000, guid: d00c011a6e5ce5c43a7bce2624c2dbdf, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -99,7 +100,7 @@ MonoBehaviour:
           m_Key: HostingServicePort
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.String
-          m_Data: ServerData/StandaloneWindows
+          m_Data: ServerData/StandaloneWindows;Library/com.unity.addressables/aa/Windows/StandaloneWindows
           m_Key: ContentRoot
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.Boolean

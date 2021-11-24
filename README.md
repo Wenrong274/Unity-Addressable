@@ -6,11 +6,7 @@
 
 詳細解說可以參考
 
-[Unity Addressables 深入浅出(一)][tutorial_2_1]
-
-[Unity Addressables 深入浅出(二)][tutorial_2_2]
-
-[Unity Addressables 深入浅出(三)][tutorial_2_3]
+Unity Addressables 深入浅出[(一)][tutorial_2_1]、[(二)][tutorial_2_2]、[(三)][tutorial_2_3]
 
 [Unity Addressable 獨立資源包][tutorial_3]
 

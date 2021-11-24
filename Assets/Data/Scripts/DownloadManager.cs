@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AddressableAssets.ResourceLocators;
@@ -9,6 +10,8 @@ namespace UnityAASample
 {
     public class DownloadManager : MonoBehaviour
     {
+        [SerializeField] private AssetReference[] assetsObjects;
+
         IEnumerator Start()
         {
             var InitAddressablesAsync = Addressables.InitializeAsync();
@@ -26,6 +29,11 @@ namespace UnityAASample
             StartCoroutine(UpdateLabelAsset(label));
         }
 
+        public void MultipleDonwloadAssets()
+        {
+            StartCoroutine(MultipleDonwloadAssets(assetsObjects));
+        }
+
         public void ClearAllAsset()
         {
             StartCoroutine(ClearAllAssetCoro());
@@ -34,6 +42,11 @@ namespace UnityAASample
         public void ClearLabelAsset(string label)
         {
             StartCoroutine(ClearAssetCoro(label));
+        }
+
+        public void ClearMultipleAssets()
+        {
+            StartCoroutine(ClearAssetCoro(assetsObjects));
         }
 
         #region Update Catalog
@@ -116,6 +129,39 @@ namespace UnityAASample
         }
         #endregion
 
+        #region Updata Multiple Assets
+
+        IEnumerator MultipleDonwloadAssets(AssetReference[] assets)
+        {
+            var assetKeys = assets.Cast<AssetReference>();
+            var updateSizeHandle = Addressables.GetDownloadSizeAsync(assetKeys);
+            long updateSize = 0;
+            if (updateSizeHandle.Status == AsyncOperationStatus.Succeeded)
+                updateSize = updateSizeHandle.Result;
+
+            if (updateSize > 0)
+            {
+                var updateHandle = Addressables.DownloadDependenciesAsync(assetKeys, Addressables.MergeMode.Union);
+                while (!updateHandle.IsDone)
+                {
+                    var st = updateHandle.GetDownloadStatus();
+                    float percent = (float)st.DownloadedBytes / (float)st.TotalBytes;
+                    Debug.Log(" Multiple Download percent " + percent);
+                    yield return new WaitForEndOfFrame();
+                }
+
+                if (updateHandle.Status == AsyncOperationStatus.Succeeded)
+                    Debug.Log(" Multiple Download Succeeded");
+                else
+                    Debug.Log(" Multiple Download Failed");
+
+                Addressables.Release(updateHandle);
+            }
+            Addressables.Release(updateSizeHandle);
+        }
+
+        #endregion
+
         #region Clear Asset
         IEnumerator ClearAllAssetCoro()
         {
@@ -131,6 +177,15 @@ namespace UnityAASample
         IEnumerator ClearAssetCoro(string label)
         {
             var async = Addressables.LoadResourceLocationsAsync(label);
+            yield return async;
+            var locats = async.Result;
+            foreach (var locat in locats)
+                Addressables.ClearDependencyCacheAsync(locat.PrimaryKey);
+        }
+
+        IEnumerator ClearAssetCoro(AssetReference[] assets)
+        {
+            var async = Addressables.LoadResourceLocationsAsync(assets);
             yield return async;
             var locats = async.Result;
             foreach (var locat in locats)
