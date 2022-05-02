@@ -10,32 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Packed Assets
+  m_Name: Multiple Assets
   m_EditorClassIdentifier: 
-  m_GroupName: Packed Assets
+  m_GroupName: Multiple Assets
   m_Data:
     m_SerializedData: []
-  m_GUID: 5a3e2475ad8e326448a95d3578561b32
+  m_GUID: 89d3032746721544d9731fb5edd04625
   m_SerializeEntries:
-  - m_GUID: 82af19ed76a8ed74fb1dd5d45c780da8
-    m_Address: ActionCheck
+  - m_GUID: fea530e0d495c3f4e87d17900fce6d52
+    m_Address: Sphere
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: dc19d125674d55e4395fbb75f6d6f855
-    m_Address: ARPoseTest
+  - m_GUID: 456ce9fd4e2eaa246b4d20a1312ee00c
+    m_Address: Capsule
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 957eefe92df624143ad9333b8bc01eb8
-    m_Address: Locomotion
+  - m_GUID: 825c1e72d1bbb624584c9daac0b4ba89
+    m_Address: Cube
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 303d6058a98f643abb202d652ad2be31
-    m_Address: SecondaryAnimation
+  - m_GUID: 15d49eb621c69dc44b39f6fddb99fe11
+    m_Address: Cylinder
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4b9d86a7e1d37a542b433b97ee6747a8, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 9a42f7abc719e304f91d587f2c2e371c, type: 2}
-    - {fileID: 11400000, guid: 5650959d22c44624b9f164f9067b96ac, type: 2}
+    - {fileID: 11400000, guid: 3e2f4da054a9a9347ab70f598fc01625, type: 2}
+    - {fileID: 11400000, guid: 71035405c09a40f44bbd584fbbbfdf55, type: 2}

@@ -1,37 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace UnityAASample
 {
-    public class DownloadManager : MonoBehaviour
+    public class AddressablesManager : MonoBehaviour
     {
-        [SerializeField] private AssetReference[] assetsObjects;
+        public static bool Isinitialized = false;
 
         IEnumerator Start()
         {
+            Isinitialized = false;
             var InitAddressablesAsync = Addressables.InitializeAsync();
             yield return InitAddressablesAsync;
             yield return UpdateCatalogCoro();
+            Isinitialized = true;
         }
 
         public void UpdateAllAddressablsGroups()
         {
             StartCoroutine(UpdateAllGroupsCoro());
-        }
-
-        public void LabelDownloadAsset(string label)
-        {
-            StartCoroutine(UpdateLabelAsset(label));
-        }
-
-        public void MultipleDonwloadAssets()
-        {
-            StartCoroutine(MultipleDonwloadAssets(assetsObjects));
         }
 
         public void ClearAllAsset()
@@ -44,18 +34,12 @@ namespace UnityAASample
             StartCoroutine(ClearAssetCoro(label));
         }
 
-        public void ClearMultipleAssets()
-        {
-            StartCoroutine(ClearAssetCoro(assetsObjects));
-        }
-
         #region Update Catalog
         IEnumerator UpdateCatalogCoro()
         {
             List<string> catalogsToUpdate = new List<string>();
-            var checkCatalogHandle = Addressables.CheckForCatalogUpdates();
+            var checkCatalogHandle = Addressables.CheckForCatalogUpdates(false);
             yield return checkCatalogHandle;
-
             if (checkCatalogHandle.Status == AsyncOperationStatus.Succeeded)
                 catalogsToUpdate = checkCatalogHandle.Result;
 
@@ -94,72 +78,6 @@ namespace UnityAASample
             }
             Debug.Log("Download All Asset finish");
         }
-        #endregion
-
-        #region Update label Asset
-        IEnumerator UpdateLabelAsset(string label)
-        {
-            long updateLabelSize = 0;
-            var async = Addressables.GetDownloadSizeAsync(label);
-            yield return async;
-            if (async.Status == AsyncOperationStatus.Succeeded)
-                updateLabelSize = async.Result;
-            Addressables.Release(async);
-            if (updateLabelSize == 0)
-            {
-                Debug.Log($"{label} last version");
-                yield break;
-            }
-            yield return DownloadLabelAsset(label);
-        }
-
-        IEnumerator DownloadLabelAsset(string label)
-        {
-            var downloadAsync = Addressables.DownloadDependenciesAsync(label, false);
-
-            while (!downloadAsync.IsDone)
-            {
-                float percent = downloadAsync.PercentComplete;
-                Debug.Log($"{label}: {downloadAsync.PercentComplete * 100} %");
-                yield return new WaitForEndOfFrame();
-            }
-            Addressables.Release(downloadAsync);
-
-            Debug.Log($"{label} UpdateAssets finish");
-        }
-        #endregion
-
-        #region Updata Multiple Assets
-
-        IEnumerator MultipleDonwloadAssets(AssetReference[] assets)
-        {
-            var assetKeys = assets.Cast<AssetReference>();
-            var updateSizeHandle = Addressables.GetDownloadSizeAsync(assetKeys);
-            long updateSize = 0;
-            if (updateSizeHandle.Status == AsyncOperationStatus.Succeeded)
-                updateSize = updateSizeHandle.Result;
-
-            if (updateSize > 0)
-            {
-                var updateHandle = Addressables.DownloadDependenciesAsync(assetKeys, Addressables.MergeMode.Union);
-                while (!updateHandle.IsDone)
-                {
-                    var st = updateHandle.GetDownloadStatus();
-                    float percent = (float)st.DownloadedBytes / (float)st.TotalBytes;
-                    Debug.Log(" Multiple Download percent " + percent);
-                    yield return new WaitForEndOfFrame();
-                }
-
-                if (updateHandle.Status == AsyncOperationStatus.Succeeded)
-                    Debug.Log(" Multiple Download Succeeded");
-                else
-                    Debug.Log(" Multiple Download Failed");
-
-                Addressables.Release(updateHandle);
-            }
-            Addressables.Release(updateSizeHandle);
-        }
-
         #endregion
 
         #region Clear Asset

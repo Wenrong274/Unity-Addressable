@@ -2,6 +2,8 @@
 
 主要是實作 Addressable hotfix 的寫法。
 
+想知道 Addressable 下載方式可以看[這篇][blog-1]。
+
 基本 Unity-Addressable 安裝及 Remote 設定可以參考這篇 [Unity筆記 Addressable Asset System][tutorial_1]。
 
 詳細解說可以參考
@@ -187,6 +189,8 @@ IEnumerator ClearAssetCoro(string label)
 
 ______________________________________________________________________
 
+[blog-1]:https://wenrongdev.com/posts/unity-addressable_download_assets/
+
 [github]:https://github.com/hybrid274/Unity-Addressable
 
 [tutorial_1]:https://medium.com/@nai.hsue/unity%E7%AD%86%E8%A8%98-addressable-asset-system-dbebf981143b
@@ -199,8 +203,6 @@ ______________________________________________________________________
 
 [tutorial_3]:https://arclee0117.wordpress.com/2020/09/10/unity-addressable-%E7%8D%A8%E7%AB%8B%E8%B3%87%E6%BA%90%E5%8C%85/
 
-[update_1]:https://i.imgur.com/p4KrH0y.jpg
+[asset_1]:https://imgur.com/QAbjzCM.jpg
 
-[asset_1]:https://i.imgur.com/I0VTkCY.jpg
-
-[asset_2]:https://i.imgur.com/bxwlzNS.jpg
+[asset_2]:https://imgur.com/Av0faq4.jpg
