@@ -20,19 +20,23 @@ MonoBehaviour:
   - m_GUID: fea530e0d495c3f4e87d17900fce6d52
     m_Address: Sphere
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - hotfix
   - m_GUID: 456ce9fd4e2eaa246b4d20a1312ee00c
     m_Address: Capsule
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - hotfix
   - m_GUID: 825c1e72d1bbb624584c9daac0b4ba89
     m_Address: Cube
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - hotfix
   - m_GUID: 15d49eb621c69dc44b39f6fddb99fe11
     m_Address: Cylinder
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - hotfix
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 4b9d86a7e1d37a542b433b97ee6747a8, type: 2}
   m_SchemaSet:

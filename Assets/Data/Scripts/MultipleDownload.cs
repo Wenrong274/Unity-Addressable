@@ -8,7 +8,7 @@ namespace UnityAASample
 {
     public class MultipleDownload : MonoBehaviour
     {
-        [SerializeField] private AssetReference asset1;
+        [SerializeField] private AssetReference asset;
         [SerializeField] private AssetReference[] assetsObjects;
 
         private IEnumerator Start()
@@ -25,7 +25,7 @@ namespace UnityAASample
 
         public void OnClick_DownloadAsset()
         {
-            StartCoroutine(UpdateAsset(asset1));
+            StartCoroutine(UpdateAsset(asset));
         }
 
         public void OnClick_DownloadLabelAsset()
